@@ -1,11 +1,10 @@
 package com.rest.restaurantlistapp.service;
 
 
-import com.rest.restaurantlistapp.dto.RestaurantDto;
 import com.rest.restaurantlistapp.entity.Restaurant;
 import com.rest.restaurantlistapp.exceptions.RestaurantNotFoundException;
-import com.rest.restaurantlistapp.mapper.RestaurantMapper;
 import com.rest.restaurantlistapp.repo.RestaurantRepo;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
@@ -34,18 +32,19 @@ public class RestaurantService {
 
         if(restaurant.isEmpty())
         {
-            throw new RestaurantNotFoundException("Restaurant not found with id:"+id);
+            return  new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(restaurant.get(),HttpStatus.OK);
+            return new ResponseEntity<>(restaurant.get(), HttpStatus.OK);
         }
+
     }
 
 
     public Restaurant saveRestaurant(Restaurant restaurant)
     {
-        Restaurant savedRestaurant=restaurantRepo.save(restaurant);
-        return  savedRestaurant;
+       Restaurant savedRestaurant=restaurantRepo.save(restaurant);
+       return savedRestaurant;
     }
 
 
